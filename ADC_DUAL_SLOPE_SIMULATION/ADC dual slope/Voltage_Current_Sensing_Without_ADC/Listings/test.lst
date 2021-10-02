@@ -1,0 +1,184 @@
+C51 COMPILER V9.60.0.0   TEST                                                              07/10/2021 20:10:39 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TEST
+OBJECT MODULE PLACED IN .\Objects\test.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE test.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\test
+                    -.lst) TABS(2) OBJECT(.\Objects\test.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include <stdio.h>
+   3          sbit LED = P1^3;
+   4          sbit SOC = P3^0;
+   5          sbit EOC = P3^1;
+   6          sbit SELECT = P3^4;
+   7          sbit MODE = P1^2;
+   8          sbit MODEOUT = P1^3;
+   9          
+  10          sbit LCD_RS = P1^4;
+  11          sbit LCD_EN = P1^6;
+  12          sbit LCD_RW = P1^5;  
+  13          #define LCD_DATA P2  // Khai báo chân data.
+  14          #define CURRENT 0x01
+  15          #define VOLTAGE 0x00
+  16          
+  17          void Delay_ms(unsigned int t) //Hàm delay
+  18          {
+  19   1        unsigned int x, y ;
+  20   1        for(x=0; x<t ; x++)
+  21   1        {
+  22   2         for(y=0; y<123; y++);
+  23   2        }
+  24   1      }
+  25          
+  26          void Lcd_cmd(unsigned char cmd)   //Hàm g?i l?nh ra LCD
+  27          
+  28          { 
+  29   1      
+  30   1         LCD_RW =0;// Ch?n ch? d? ghi
+  31   1         LCD_RS =0;// Ch?n ch? d? ghi l?nh
+  32   1         LCD_DATA =cmd;// cmd là l?nh c?n g?i ra màn hình
+  33   1         LCD_EN = 0;              
+  34   1         LCD_EN =1;
+  35   1         if(cmd<=0x02){
+  36   2         Delay_ms(2);
+  37   2         }
+  38   1         else{
+  39   2         Delay_ms(1);}
+  40   1      
+  41   1      }
+  42          void Lcd_Char_Cp(char c)//Hàm hi?n th? 1 kí t? t?i v? trí con tr?
+  43          {
+  44   1         LCD_RW =0;
+  45   1         LCD_RS =1; //Ch?n ch? d? g?i d? li?u
+  46   1         LCD_DATA =c;  //Kí t? c?n g?i ra màn hình
+  47   1         LCD_EN = 0;
+  48   1         LCD_EN =1;
+  49   1         Delay_ms(1);
+  50   1      
+  51   1      }
+  52          void Lcd_Out_Cp(char *str)// Hàm g?i chu?i kí t? t?i v? trí con tr?
+  53          
+  54          {
+C51 COMPILER V9.60.0.0   TEST                                                              07/10/2021 20:10:39 PAGE 2   
+
+  55   1      
+  56   1      unsigned char i=0;
+  57   1      while(str[i]!=0)  //G?i t?ng kí t? c?a chu?i d?n khi g?p kí t? null
+  58   1      {
+  59   2         Lcd_Char_Cp(str[i]);
+  60   2         i++;
+  61   2      }
+  62   1      
+  63   1      }
+  64          
+  65          
+  66          void Lcd_Out(unsigned char row, unsigned char col, char *str)   //Hàm Di chuy?n v? trí con tr? d?n v? trí b
+             -?t kì và in chu?i ra màn hình
+  67          {
+  68   1        unsigned char cmd;
+  69   1      
+  70   1        // Di chuy?n con tr? d?n v? trí c?n thi?t
+  71   1        cmd = (row==1?0x80:0xC0) + col - 1;
+  72   1        Lcd_cmd(cmd);
+  73   1        Lcd_Out_Cp(str);
+  74   1      }
+  75          
+  76          
+  77          void Lcd_Init() //Hàm kh?i t?o LCD
+  78          {
+  79   1      
+  80   1       Lcd_cmd(0x30);
+  81   1       Delay_ms(5);
+  82   1       Lcd_cmd(0x30);
+  83   1       Delay_ms(1);
+  84   1       Lcd_cmd(0x30);
+  85   1       Lcd_cmd(0x38);   // S? dòng hi?n th? là 2, c? ch? 5x8
+  86   1       Lcd_cmd(0x01);   // xóa màn hình
+  87   1       Lcd_cmd(0x0C);   //B?t hi?n th? và t?t con tr? các b?n có th? dùng l?nh 0xE0 d? b?t hi?n th? và b?t con t
+             -r?
+  88   1      }
+  89          
+  90          
+  91          
+  92          
+  93          
+  94          
+  95          unsigned char sel = 0;
+  96          char arr[30];
+  97          unsigned int value = 0;
+  98          unsigned int value1 = 0;
+  99          int result;
+ 100          float voltage = 0;
+ 101          
+ 102          int main()
+ 103          {
+ 104   1        
+ 105   1        Lcd_Init();
+ 106   1        TMOD = 0x01;
+ 107   1        while(1)
+ 108   1        {
+ 109   2          if( MODE  == 1 )
+ 110   2          {
+ 111   3            MODEOUT = CURRENT;
+ 112   3            sel = CURRENT;
+ 113   3          }
+ 114   2          else
+C51 COMPILER V9.60.0.0   TEST                                                              07/10/2021 20:10:39 PAGE 3   
+
+ 115   2          {
+ 116   3            MODEOUT = VOLTAGE;
+ 117   3            sel = VOLTAGE;
+ 118   3          }
+ 119   2          TH0 = 0xFC;
+ 120   2          TL0 = 0x00;
+ 121   2          SELECT = 0;
+ 122   2          SOC = 1;
+ 123   2          Delay_ms(1);
+ 124   2          SOC = 0;
+ 125   2          TR0 = 1;
+ 126   2          while(!TF0);
+ 127   2          TF0 = 0;
+ 128   2          TR0 = 0;
+ 129   2          SELECT = 1;
+ 130   2          TH0 = 0xFC;
+ 131   2          TL0 = 0x00;
+ 132   2          //SOC = 1;
+ 133   2          //Delay_ms(2);
+ 134   2          //SOC = 0;
+ 135   2          TR0 = 1;
+ 136   2          while(EOC);
+ 137   2          TR0 = 0;
+ 138   2          value1 = TH0;
+ 139   2          value = TL0;
+ 140   2          TH0 = 0xFC;
+ 141   2          TL0 = 0x00;
+ 142   2          TF0 = 0;
+ 143   2          result = ((value1-252) << 8 ) + value;
+ 144   2          voltage = (((float)result/(float)1030)*5);
+ 145   2          if( sel == CURRENT )
+ 146   2            sprintf(arr,"Voltage:%0.002fV",voltage);
+ 147   2          else
+ 148   2            sprintf(arr,"Current:%dmA",(int)((voltage/5)*1000));
+ 149   2          Lcd_Out(1,1,arr);
+ 150   2          Delay_ms(100);
+ 151   2      
+ 152   2        }
+ 153   1      }
+ 154            
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    432    ----
+   CONSTANT SIZE    =     30    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     41       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

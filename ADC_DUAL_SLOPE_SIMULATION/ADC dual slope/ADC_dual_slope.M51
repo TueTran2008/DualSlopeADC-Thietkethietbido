@@ -1,0 +1,89 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        05/28/2017  20:33:10  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+C:\KEIL\C51\BIN\BL51.EXE ADC_dual_slope.obj TO ADC_dual_slope
+
+
+INPUT MODULES INCLUDED:
+  ADC_dual_slope.obj (ADC_DUAL_SLOPE)
+
+
+LINK MAP OF MODULE:  ADC_dual_slope (ADC_DUAL_SLOPE)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0049H     ABSOLUTE     
+
+
+
+SYMBOL TABLE OF MODULE:  ADC_dual_slope (ADC_DUAL_SLOPE)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ADC_DUAL_SLOPE
+  D:00F0H         SYMBOL        B
+  B:00B0H.1       SYMBOL        EOC
+  D:0080H         SYMBOL        HEXA_OUTPUT
+  C:0003H         SYMBOL        MAIN
+  D:0080H         SYMBOL        P0
+  D:0090H         SYMBOL        P1
+  D:00A0H         SYMBOL        P2
+  D:00B0H         SYMBOL        P3
+  B:00B0H.4       SYMBOL        SELECT
+  B:00B0H.0       SYMBOL        SOC
+  B:0088H.5       SYMBOL        TF0
+  D:008AH         SYMBOL        TL0
+  D:0089H         SYMBOL        TMOD
+  B:0088H.4       SYMBOL        TR0
+  C:0006H         SYMBOL        _LOOP
+  C:0000H         LINE#         12
+  C:0003H         LINE#         15
+  C:0006H         LINE#         19
+  C:0009H         LINE#         20
+  C:000BH         LINE#         21
+  C:000DH         LINE#         22
+  C:000FH         LINE#         23
+  C:0011H         LINE#         24
+  C:0014H         LINE#         25
+  C:0016H         LINE#         26
+  C:0018H         LINE#         27
+  C:001BH         LINE#         28
+  C:001DH         LINE#         29
+  C:001FH         LINE#         30
+  C:0021H         LINE#         31
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/28/2017  20:33:10  PAGE 2
+
+
+  C:0024H         LINE#         32
+  C:0026H         LINE#         33
+  C:0028H         LINE#         34
+  C:002AH         LINE#         37
+  C:002CH         LINE#         38
+  C:002FH         LINE#         39
+  C:0030H         LINE#         40
+  C:0032H         LINE#         41
+  C:0035H         LINE#         42
+  C:0036H         LINE#         43
+  C:0038H         LINE#         44
+  C:003BH         LINE#         45
+  C:003CH         LINE#         46
+  C:003EH         LINE#         49
+  C:003FH         LINE#         50
+  C:0040H         LINE#         51
+  C:0041H         LINE#         52
+  C:0043H         LINE#         53
+  C:0044H         LINE#         54
+  C:0046H         LINE#         56
+  C:0048H         LINE#         57
+  -------         ENDMOD        ADC_DUAL_SLOPE
+
+Program Size: data=8.0 xdata=0 code=73
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,101 @@
+A51 MACRO ASSEMBLER  ADC_DUAL_SLOPE                                                       05/28/2017 20:33:10 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.02
+OBJECT MODULE PLACED IN ADC_dual_slope.OBJ
+ASSEMBLER INVOKED BY: C:\Keil\C51\BIN\A51.EXE ADC_dual_slope.asm SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ; Dang Manh Truong (MSSV 20134209)
+                       2     ; Chuong trinh thuc hien "dual slope ADC" 
+                       3     ; Tham khao: 
+                       4     ; [1] Microprocessor Interfacing Techniques - Austin Lesea, Rodnay Zaks
+                       5     ; [2] http://www.hardwaresecrets.com/how-analog-to-digital-converter-adc-works/8/
+  00B0                 6     SOC                             EQU                     P3.0 ; Start of conversion (bat dau
+                              chuyen doi)
+  00B1                 7     EOC                             EQU                     P3.1 ; End of conversion (ket thuc 
+                             chuyen doi)
+  00B4                 8     SELECT                  EQU                     P3.4 ; Chon tin hieu V_in hay -V_ref
+  0080                 9     HEXA_OUTPUT     EQU                     P0
+                      10     
+0000                  11     ORG                             0h
+0000 020003           12     LJMP                    MAIN
+                      13     
+0003                  14     MAIN:
+0003 758903           15     MOV                             TMOD,#00000011B
+0006                  16     _loop:
+                      17     ; Thuc hien chuyen doi theo nguyen ly "dual slope"
+                      18     ; 8051 dong vai tro nhu 1 bo dem (free running counter)
+0006 758A00           19     MOV                             TL0,#0
+0009 C2B4             20     CLR                             SELECT ; Chon V_in
+000B D2B0             21     SETB                    SOC     ; Bat dau chuyen doi (giai doan 1)
+000D C2B0             22     CLR                             SOC     
+000F D28C             23     SETB                    TR0     ; Start Timer 0
+0011 308DFD           24     JNB                             TF0,$
+0014 C28C             25     CLR                             TR0
+0016 D2B4             26     SETB                    SELECT ; Chon -V_ref
+0018 758A00           27     MOV                             TL0,#0
+001B D2B0             28     SETB                    SOC     ; Bat dau chuyen doi (giai doan 2)
+001D C2B0             29     CLR                             SOC
+001F D28C             30     SETB                    TR0     ; Start Timer 0
+0021 20B1FD           31     JB                              EOC,$
+0024 C28C             32     CLR                             TR0
+0026 E58A             33     MOV                             A,TL0 ; Luu ket qua
+0028 F580             34     MOV                             HEXA_OUTPUT,A
+                      35     
+                      36     ; Quy doi tu hexa ve so thap phan
+002A E58A             37     MOV                             A,TL0
+002C 75F00A           38     MOV                             B,#10 ; Chia cho 10
+002F 84               39     DIV                             AB
+0030 ADF0             40     MOV                             R5,B  ; Cat chu so hang don vi
+0032 75F00A           41     MOV                             B,#10
+0035 84               42     DIV                             AB
+0036 ACF0             43     MOV                             R4,B  ; Cat chu so hang chuc
+0038 75F00A           44     MOV                             B,#10
+003B 84               45     DIV                             AB
+003C ABF0             46     MOV                             R3,B  ; Cat chu so hang tram
+                      47     
+                      48     ; Hien thi tren LED  
+003E EC               49     MOV                             A,R4 
+003F C4               50     SWAP                    A
+0040 2D               51     ADD                             A,R5 
+0041 F5A0             52     MOV                             P2,A  ; Hien thi ca chu so hang chuc va don vi bang cong P2
+0043 EB               53     MOV                             A,R3 
+0044 F590             54     MOV                             P1,A ; Hien thi chu so hang tram
+                      55     
+0046 80BE             56     JMP                             _loop  
+A51 MACRO ASSEMBLER  ADC_DUAL_SLOPE                                                       05/28/2017 20:33:10 PAGE     2
+
+0048 22               57     RET
+                      58     
+                      59     END
+A51 MACRO ASSEMBLER  ADC_DUAL_SLOPE                                                       05/28/2017 20:33:10 PAGE     3
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+B. . . . . . . . .  D ADDR   00F0H   A   
+EOC. . . . . . . .  B ADDR   00B0H.1 A   
+HEXA_OUTPUT. . . .  D ADDR   0080H   A   
+MAIN . . . . . . .  C ADDR   0003H   A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+SELECT . . . . . .  B ADDR   00B0H.4 A   
+SOC. . . . . . . .  B ADDR   00B0H.0 A   
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+_LOOP. . . . . . .  C ADDR   0006H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
